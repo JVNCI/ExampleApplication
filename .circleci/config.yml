@@ -9,12 +9,6 @@ workflows:
             branches:
               only:
                 - main
-      - deploy:
-        filters:
-          branches:
-            only: -main
-        requires:
-          - build
 
 jobs:
   build:
@@ -35,10 +29,3 @@ jobs:
           key: dependency-cache-{{ checksum "package-lock.json" }}
           paths:
             - ./node_modules
-  deploy:
-    docker:
-      - image: circleci/node:10.16.3
-    steps:
-      - run:
-          name: deploy-application
-          command: ssh -o StrictHostKeyChecking=no $EC2_USERNAME_PUBLIC_DNS "rm -rf ExampleApplication/;git clone https://github.com/JVNCI/ExampleApplication.git; source ExampleApplication/deploy.sh"
